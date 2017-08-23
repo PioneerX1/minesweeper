@@ -3,8 +3,8 @@
     {{gameStatusMessage}}
   </div>
   <div class="board" *ngFor="let row of [0,1,2,3,4,5]">
-    <app-cell *ngFor="let col of [0,1,2,3,4,5]">
-    </app-cell>
+    <app-cell *ngFor="let col of [0,1,2,3,4,5]" [state]="squares[col+row*6]"
+		(click)="handleMove(col+row*6)"></app-cell>
   </div>
   <button class="restart">New Game</button>
 </div>

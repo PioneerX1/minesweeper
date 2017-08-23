@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+// import { CellComponent } from '../cell/cell.component';
 
 @Component({
   selector: 'app-board',
@@ -8,13 +9,19 @@ import { Component, OnInit } from '@angular/core';
 export class BoardComponent implements OnInit {
 
   squares = Array(36).fill(null);
-  // player = 'X';
-  alive: boolean = true;
+  alive = null;
 
   get gameStatusMessage(){
     return this.alive? `You are still alive.` :
     `Bomb has sploded. You are dead.`;
   }
+
+  handleMove(position) {
+
+    this.squares[position] = position;
+
+  }
+
 
   constructor() { }
 
