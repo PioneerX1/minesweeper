@@ -8,6 +8,8 @@ import { Component, OnInit } from '@angular/core';
 })
 export class BoardComponent implements OnInit {
 
+  rows: number = 6;
+  columns: number = 6;
   squares = Array(36).fill(null);
   alive = null;
   bombs: number[] = this.selectRandomSquare();
@@ -19,22 +21,41 @@ export class BoardComponent implements OnInit {
 
   handleMove(position) {
     this.squares[position] = position;
-    for (var i = 0; i < this.bombs.length; i++) {
-      if (position === this.bombs[i] ) {
+    var bombThreat: number = 0;
+    for (var i = 0; i<this.bombs.length; i++) {
+      if (position === 0 && (this.bombs[i] === position + 1 || this.bombs[i] === position + this.columns || this.bombs[i] === position + this.columns + 1 )) {
+        bombThreat++;
+        this.squares[position] = bombThreat;
+      } else if (position === this.bombs[i]){
+
         this.squares[position] = 'b';
+
       }
+
     }
   }
+
+
+
 
   selectRandomSquare() {
     var bombs: number [] = [];
     var randomBomb: number;
     for (var i = 0; i<5; i++) {
       randomBomb = Math.floor(Math.random()*36);
-      bombs.push(randomBomb);
-      console.log(randomBomb);
+      var duplicate = false;
+      for(var k = 0; k < bombs.length; k++) {
+        if(bombs[k] === randomBomb) {
+          duplicate = true;
+        }
+      }
+      if (duplicate === false) {
+        bombs.push(randomBomb);
+      } else {
+        i--;
+      }
     }
-
+    console.log(bombs);
     return bombs;
   }
 
