@@ -18,18 +18,18 @@ export class BoardComponent implements OnInit {
   }
 
   handleMove(position) {
-    if (position === this.bombs[0] || position === this.bombs[1] ) {
-      this.squares[position] = 'b';
-    } else {
-      this.squares[position] = position;
+    this.squares[position] = position;
+    for (var i = 0; i < this.bombs.length; i++) {
+      if (position === this.bombs[i] ) {
+        this.squares[position] = 'b';
+      }
     }
-
   }
 
   selectRandomSquare() {
     var bombs: number [] = [];
     var randomBomb: number;
-    for (var i = 0; i<2; i++) {
+    for (var i = 0; i<5; i++) {
       randomBomb = Math.floor(Math.random()*36);
       bombs.push(randomBomb);
       console.log(randomBomb);
