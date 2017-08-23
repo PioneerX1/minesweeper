@@ -11,7 +11,7 @@ export class BoardComponent implements OnInit {
   rows: number = 6;
   columns: number = 6;
   squares = Array(36).fill(null);
-  alive = null;
+  alive = true;
   bombs: number[] = this.selectRandomSquare();
 
   get gameStatusMessage(){
@@ -23,15 +23,31 @@ export class BoardComponent implements OnInit {
     this.squares[position] = position;
     var bombThreat: number = 0;
     for (var i = 0; i<this.bombs.length; i++) {
-      if (position === 0 && (this.bombs[i] === position + 1 || this.bombs[i] === position + this.columns || this.bombs[i] === position + this.columns + 1 )) {
+
+  // left corner
+      if (position === this.bombs[i]){
+        this.squares[position] = 'b';
+        i = this.bombs.length;
+      } else if (position === 0 && (
+        this.bombs[i] === position + 1 ||
+        this.bombs[i] === position + this.columns ||
+        this.bombs[i] === position + this.columns + 1 )) {
+          bombThreat++;
+          this.squares[position] = bombThreat;
+      } else if (position > 0 && position < (this.columns - 1) && (
+      this.bombs[i] === position + 1 ||
+      this.bombs[i] === position + this.columns ||
+      this.bombs[i] === position + this.columns + 1 ||
+      this.bombs[i] === position - 1 ||
+      this.bombs[i] === position + this.columns - 1)) {
         bombThreat++;
         this.squares[position] = bombThreat;
-      } else if (position === this.bombs[i]){
-
-        this.squares[position] = 'b';
-
       }
 
+    }
+
+    if (this.squares[position]!=='b' && bombThreat === 0) {
+      this.squares[position] = '-';
     }
   }
 
