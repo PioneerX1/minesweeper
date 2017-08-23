@@ -10,6 +10,7 @@ export class BoardComponent implements OnInit {
 
   squares = Array(36).fill(null);
   alive = null;
+  bombs: number[] = this.selectRandomSquare();
 
   get gameStatusMessage(){
     return this.alive? `You are still alive.` :
@@ -17,11 +18,25 @@ export class BoardComponent implements OnInit {
   }
 
   handleMove(position) {
-
-    this.squares[position] = position;
+    if (position === this.bombs[0] || position === this.bombs[1] ) {
+      this.squares[position] = 'b';
+    } else {
+      this.squares[position] = position;
+    }
 
   }
 
+  selectRandomSquare() {
+    var bombs: number [] = [];
+    var randomBomb: number;
+    for (var i = 0; i<2; i++) {
+      randomBomb = Math.floor(Math.random()*36);
+      bombs.push(randomBomb);
+      console.log(randomBomb);
+    }
+
+    return bombs;
+  }
 
   constructor() { }
 
