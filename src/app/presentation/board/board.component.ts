@@ -24,17 +24,21 @@ export class BoardComponent implements OnInit {
     var bombThreat: number = 0;
     for (var i = 0; i<this.bombs.length; i++) {
 
-  // left corner
+      // bomb check
       if (position === this.bombs[i]){
         this.squares[position] = 'b';
         i = this.bombs.length;
-      } else if (position === 0 && (
+      }
+      // top left corner
+      else if (position === 0 && (
         this.bombs[i] === position + 1 ||
         this.bombs[i] === position + this.columns ||
         this.bombs[i] === position + this.columns + 1 )) {
           bombThreat++;
           this.squares[position] = bombThreat;
-      } else if (position > 0 && position < (this.columns - 1) && (
+      }
+      // middle of top row
+      else if (position > 0 && position < (this.columns - 1) && (
       this.bombs[i] === position + 1 ||
       this.bombs[i] === position + this.columns ||
       this.bombs[i] === position + this.columns + 1 ||
@@ -43,6 +47,14 @@ export class BoardComponent implements OnInit {
         bombThreat++;
         this.squares[position] = bombThreat;
       }
+      // top right corner
+      else if (position === this.columns - 1 && (
+        this.bombs[i] === position - 1 ||
+        this.bombs[i] === position + this.columns ||
+        this.bombs[i] === position + this.columns - 1 )) {
+          bombThreat++;
+          this.squares[position] = bombThreat;
+        }
 
     }
 
