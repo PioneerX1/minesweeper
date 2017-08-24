@@ -12,6 +12,7 @@ export class CellComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
+    
   }
 
 }

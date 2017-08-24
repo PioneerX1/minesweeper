@@ -8,9 +8,9 @@ import { Component, OnInit } from '@angular/core';
 })
 export class BoardComponent implements OnInit {
 
-  rows: number = 6;
-  columns: number = 6;
-  squares = Array(36).fill(null);
+  rows = [0,1,2,3,4,5,6];
+  columns = [0,1,2,3,4,5,6];
+  squares = Array(this.rows.length*this.columns.length).fill(null);
   alive = true;
   bombs: number[] = this.selectRandomSquare();
 
@@ -20,45 +20,108 @@ export class BoardComponent implements OnInit {
   }
 
   handleMove(position) {
-    this.squares[position] = position;
-    var bombThreat: number = 0;
-    for (var i = 0; i<this.bombs.length; i++) {
+    let neighbors = {
+      UP: position - this.columns.length,
+      UPRIGHT: position - this.columns.length + 1,
+      RIGHT: position + 1,
+      DOWNRIGHT: position + this.columns.length + 1,
+      DOWN: position + this.columns.length,
+      DOWNLEFT: position + this.columns.length - 1,
+      LEFT: position - 1,
+      UPLEFT: position - this.columns.length - 1,
+    };
+    let bombThreat: number = 0;
+    if (this.squares[position] === null) {
+      this.squares[position] = -1;
 
-      // bomb check
-      if (position === this.bombs[i]){
-        this.squares[position] = 'b';
-        i = this.bombs.length;
-      }
-      // top left corner
-      else if (position === 0 && (
-        this.bombs[i] === position + 1 ||
-        this.bombs[i] === position + this.columns ||
-        this.bombs[i] === position + this.columns + 1 )) {
-          bombThreat++;
-          this.squares[position] = bombThreat;
-      }
-      // middle of top row
-      else if (position > 0 && position < (this.columns - 1) && (
-      this.bombs[i] === position + 1 ||
-      this.bombs[i] === position + this.columns ||
-      this.bombs[i] === position + this.columns + 1 ||
-      this.bombs[i] === position - 1 ||
-      this.bombs[i] === position + this.columns - 1)) {
-        bombThreat++;
-        this.squares[position] = bombThreat;
-      }
-      // top right corner
-      else if (position === this.columns - 1 && (
-        this.bombs[i] === position - 1 ||
-        this.bombs[i] === position + this.columns ||
-        this.bombs[i] === position + this.columns - 1 )) {
-          bombThreat++;
-          this.squares[position] = bombThreat;
+      for (let i = 0; i<this.bombs.length; i++) {
+        switch(true){
+          case (position === this.bombs[i]):
+            this.squares[position] = 'b';
+            i = this.bombs.length;
+            break;
+          case (position === 0):
+            if (this.bombs[i] === neighbors.RIGHT ||
+                this.bombs[i] === neighbors.DOWNRIGHT ||
+                this.bombs[i] === neighbors.DOWN) {
+              bombThreat++;
+              this.squares[position] = bombThreat; }
+            break;
+          case (position === this.columns.length - 1):
+            if (this.bombs[i] === neighbors.LEFT ||
+                this.bombs[i] === neighbors.DOWNLEFT ||
+                this.bombs[i] === neighbors.DOWN ) {
+              bombThreat++;
+              this.squares[position] = bombThreat; }
+            break;
+          case (position === this.columns.length*this.rows.length - 1):
+            if (this.bombs[i] === neighbors.LEFT ||
+                this.bombs[i] === neighbors.UPLEFT ||
+                this.bombs[i] === neighbors.UP ) {
+              bombThreat++;
+              this.squares[position] = bombThreat; }
+            break;
+          case (position === this.columns.length*this.rows.length - this.columns.length):
+            if (this.bombs[i] === neighbors.RIGHT ||
+                this.bombs[i] === neighbors.UPRIGHT ||
+                this.bombs[i] === neighbors.UP ) {
+              bombThreat++;
+              this.squares[position] = bombThreat; }
+            break;
+          case (position < this.columns.length -1):
+            if (this.bombs[i] === neighbors.RIGHT ||
+                this.bombs[i] === neighbors.DOWNRIGHT ||
+                this.bombs[i] === neighbors.DOWN ||
+                this.bombs[i] === neighbors.DOWNLEFT ||
+                this.bombs[i] === neighbors.LEFT ) {
+              bombThreat++;
+              this.squares[position] = bombThreat; }
+            break;
+          case (position % this.columns.length === this.columns.length - 1):
+            if (this.bombs[i] === neighbors.UP ||
+                this.bombs[i] === neighbors.UPLEFT ||
+                this.bombs[i] === neighbors.LEFT ||
+                this.bombs[i] === neighbors.DOWNLEFT ||
+                this.bombs[i] === neighbors.DOWN ) {
+              bombThreat++;
+              this.squares[position] = bombThreat; }
+            break;
+          case (position > this.columns.length*(this.rows.length - 1)):
+            if (this.bombs[i] === neighbors.LEFT ||
+                this.bombs[i] === neighbors.UPLEFT ||
+                this.bombs[i] === neighbors.UP ||
+                this.bombs[i] === neighbors.UPRIGHT ||
+                this.bombs[i] === neighbors.RIGHT ) {
+              bombThreat++;
+              this.squares[position] = bombThreat; }
+            break;
+          case (position % this.columns.length === 0 ):
+            if (this.bombs[i] === neighbors.UP ||
+                this.bombs[i] === neighbors.UPRIGHT ||
+                this.bombs[i] === neighbors.RIGHT ||
+                this.bombs[i] === neighbors.DOWNRIGHT ||
+                this.bombs[i] === neighbors.DOWN ) {
+              bombThreat++;
+              this.squares[position] = bombThreat; }
+            break;
+          case (position % this.columns.length > 0):
+            if (this.bombs[i] === neighbors.UP ||
+                this.bombs[i] === neighbors.UPRIGHT ||
+                this.bombs[i] === neighbors.RIGHT ||
+                this.bombs[i] === neighbors.DOWNRIGHT ||
+                this.bombs[i] === neighbors.DOWN ||
+                this.bombs[i] === neighbors.DOWNLEFT ||
+                this.bombs[i] === neighbors.LEFT ||
+                this.bombs[i] === neighbors.UPLEFT ) {
+              bombThreat++;
+              this.squares[position] = bombThreat; }
+            break;
+          default:
+            this.squares[position] = '-';
         }
-
+      }
     }
-
-    if (this.squares[position]!=='b' && bombThreat === 0) {
+    if (this.squares[position]===-1 ) {
       this.squares[position] = '-';
     }
   }
