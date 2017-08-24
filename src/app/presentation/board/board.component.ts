@@ -13,13 +13,22 @@ export class BoardComponent implements OnInit {
   squares = Array(this.rows.length*this.columns.length).fill(null);
   alive = true;
   bombs: number[] = this.selectRandomSquare();
+  squaresRemaining: number = this.squares.length;
 
   get gameStatusMessage(){
     return this.alive? `You are still alive.` :
     `Bomb has sploded. You are dead.`;
   }
 
+  checkWin() {
+    if(this.squaresRemaining === this.bombs.length && this.alive === true){
+      alert('You have winner! Haha!');
+    }
+  }
+
   handleMove(position) {
+    if(this.alive) {
+
     let neighbors = {
       UP: position - this.columns.length,
       UPRIGHT: position - this.columns.length + 1,
@@ -39,6 +48,7 @@ export class BoardComponent implements OnInit {
           case (position === this.bombs[i]):
             this.squares[position] = 'b';
             i = this.bombs.length;
+            this.alive = false;
             break;
           case (position === 0):
             if (this.bombs[i] === neighbors.RIGHT ||
@@ -120,6 +130,9 @@ export class BoardComponent implements OnInit {
             this.squares[position] = '-';
         }
       }
+      this.squaresRemaining--;
+      console.log('Squares Remaining: ' + this.squaresRemaining);
+
     }
     if (this.squares[position]===-1 ) {
       this.squares[position] = '-';
@@ -128,10 +141,45 @@ export class BoardComponent implements OnInit {
         console.log('hi');
         this.handleMove(neighbors.UP);
       }
-      if (position >= this.columns.length || position % this.columns.length - 1) { // looking for neighbor up RIGHT
+      if ((position >= this.columns.length) && (position % this.columns.length) < (this.columns.length - 1)) { // looking for neighbor up RIGHT
+        console.log ("position:" + position + "; this.columns.length:" + this.columns.length + "position % this.columns.length: " + position % this.columns.length);
         this.handleMove(neighbors.UPRIGHT);
       }
+
+      if ( (position % this.columns.length) < (this.columns.length - 1)) { // looking for neighbor RIGHT
+        this.handleMove(neighbors.RIGHT);
+      }
+
+      if ( (position % this.columns.length) < (this.columns.length - 1) && position < this.squares.length - this.columns.length) { // looking for neighbor down RIGHT
+        this.handleMove(neighbors.DOWNRIGHT);
+      }
+
+      if (position < this.squares.length - this.columns.length){ // looking for neighbor DOWN
+        console.log('hi');
+        this.handleMove(neighbors.DOWN);
+      }
+
+      if (position < this.squares.length - this.columns.length && (position % this.columns.length) > 0){ // looking for neighbor DOWN left
+        console.log('hi');
+        this.handleMove(neighbors.DOWNLEFT);
+      }
+
+      if ( (position % this.columns.length) > 0) { // looking for neighbor LEFT
+        this.handleMove(neighbors.LEFT);
+      }
+
+      if ( (position % this.columns.length) > 0 && position >= this.columns.length) { // looking for neighbor up LEFT
+        this.handleMove(neighbors.UPLEFT);
+      }
     }
+    this.checkWin();
+  } else {
+    alert('You dead sucka. Hahaha!');
+  }
+  }
+
+  newGame() {
+    location.reload();
   }
 
 

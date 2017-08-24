@@ -6,5 +6,5 @@
     <app-cell *ngFor="let col of columns" [state]="squares[col+row*columns.length]"
 		(click)="handleMove(col+row*columns.length);"></app-cell>
   </div>
-  <button class="restart">New Game</button>
+  <button class="restart" (click)="newGame()">New Game</button>
 </div>
