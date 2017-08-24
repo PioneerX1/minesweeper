@@ -123,6 +123,14 @@ export class BoardComponent implements OnInit {
     }
     if (this.squares[position]===-1 ) {
       this.squares[position] = '-';
+      console.log(position);
+      if (position >= this.columns.length){ // looking for neighbor up
+        console.log('hi');
+        this.handleMove(neighbors.UP);
+      }
+      if (position >= this.columns.length || position % this.columns.length - 1) { // looking for neighbor up RIGHT
+        this.handleMove(neighbors.UPRIGHT);
+      }
     }
   }
 
