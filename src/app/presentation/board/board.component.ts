@@ -12,17 +12,43 @@ export class BoardComponent implements OnInit {
   columns = [0,1,2,3,4,5,6];
   squares = Array(this.rows.length*this.columns.length).fill(null);
   alive = true;
+  winner = false;
   bombs: number[] = this.selectRandomSquare();
   squaresRemaining: number = this.squares.length;
 
   get gameStatusMessage(){
-    return this.alive? `You are still alive.` :
-    `Bomb has sploded. You are dead.`;
+    if (this.winner) {
+      return `YOU WIN!!`;
+    } else if (this.alive) {
+      return `You are still alive. Click a square to reveal. SHIFT-Click to toggle flag.`;
+    } else {
+      return `Bomb has sploded. You are dead.`;
+    }
+
   }
 
   checkWin() {
     if(this.squaresRemaining === this.bombs.length && this.alive === true){
-      alert('You have winner! Haha!');
+      for (var i = 0; i<this.bombs.length; i++) {
+        this.squares[this.bombs[i]] = 'b';
+      }
+      this.winner = true;
+    }
+  }
+
+  flag(position) {
+    if(this.squares[position] === "?") {
+      this.squares[position] = null;
+    } else {
+      this.squares[position] = "?";
+    }
+  }
+
+  toggleSelected(position, event) {
+    if(event.shiftKey) {
+      this.flag(position);
+    } else {
+      this.handleMove(position);
     }
   }
 

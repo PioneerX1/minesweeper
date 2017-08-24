@@ -4,7 +4,7 @@
   </div>
   <div class="board" *ngFor="let row of rows">
     <app-cell *ngFor="let col of columns" [state]="squares[col+row*columns.length]"
-		(click)="handleMove(col+row*columns.length);"></app-cell>
+		(click)="toggleSelected(col+row*columns.length, $event);"></app-cell>
   </div>
   <button class="restart" (click)="newGame()">New Game</button>
 </div>

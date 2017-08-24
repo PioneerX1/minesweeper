@@ -5,6 +5,9 @@
   justify-content: flex-start;
   background-color: #a45632;
   color: #fff;
+  user-select: none;
+-webkit-user-select: none;
+-moz-user-select: none;
 }
 
 .gameStatus {
